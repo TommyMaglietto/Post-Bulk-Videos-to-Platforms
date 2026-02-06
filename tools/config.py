@@ -31,6 +31,33 @@ BRAND_CONFIG_PATH = BASE_DIR / "brand_config.json"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 # ---------------------------------------------------------------------------
+# AWS S3
+# ---------------------------------------------------------------------------
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET", "")
+AWS_S3_REGION = os.getenv("AWS_S3_REGION", "us-east-1")
+
+# ---------------------------------------------------------------------------
+# Instagram (Meta Graph API)
+# ---------------------------------------------------------------------------
+INSTAGRAM_USER_ID = os.getenv("INSTAGRAM_USER_ID", "")
+INSTAGRAM_ACCESS_TOKEN = os.getenv("INSTAGRAM_ACCESS_TOKEN", "")
+
+# ---------------------------------------------------------------------------
+# Facebook (Meta Graph API)
+# ---------------------------------------------------------------------------
+FACEBOOK_PAGE_ID = os.getenv("FACEBOOK_PAGE_ID", "")
+FACEBOOK_PAGE_ACCESS_TOKEN = os.getenv("FACEBOOK_PAGE_ACCESS_TOKEN", "")
+
+# ---------------------------------------------------------------------------
+# TikTok (Content Posting API)
+# ---------------------------------------------------------------------------
+TIKTOK_CLIENT_KEY = os.getenv("TIKTOK_CLIENT_KEY", "")
+TIKTOK_CLIENT_SECRET = os.getenv("TIKTOK_CLIENT_SECRET", "")
+TIKTOK_ACCESS_TOKEN = os.getenv("TIKTOK_ACCESS_TOKEN", "")
+
+# ---------------------------------------------------------------------------
 # Brand Config
 # ---------------------------------------------------------------------------
 
