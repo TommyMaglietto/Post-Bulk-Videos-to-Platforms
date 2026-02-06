@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(python tools/run_pipeline.py:*)",
+      "Bash(python -u tools/run_pipeline.py:*)"
+    ]
+  }
+}

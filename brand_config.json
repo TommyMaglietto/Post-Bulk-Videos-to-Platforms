@@ -1,0 +1,12 @@
+{
+  "brand_voice": "",
+  "audience": "",
+  "niche": "",
+  "cta_style": "",
+  "hashtag_style": "",
+  "banned_list": "",
+  "videos_per_batch": 15,
+  "timezone": "America/New_York",
+  "posts_per_day": 3,
+  "start_date": "auto"
+}
