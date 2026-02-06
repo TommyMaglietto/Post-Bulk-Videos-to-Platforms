@@ -66,20 +66,18 @@ def post_reel(video_path: str, caption: str, hashtags: list[str]) -> dict:
         return {"success": False, "platform": "facebook",
                 "error": f"No video_id returned: {init_resp.json()}"}
 
-    # Step 2: Upload video binary
+    # Step 2: Upload video binary (streamed — avoids loading entire file into RAM)
     with open(video_path, "rb") as f:
-        video_data = f.read()
-
-    upload_resp = requests.post(
-        f"{RUPLOAD_API}/{video_id}",
-        headers={
-            "Authorization": f"OAuth {FACEBOOK_PAGE_ACCESS_TOKEN}",
-            "offset": "0",
-            "file_size": str(file_size),
-            "Content-Type": "application/octet-stream",
-        },
-        data=video_data,
-    )
+        upload_resp = requests.post(
+            f"{RUPLOAD_API}/{video_id}",
+            headers={
+                "Authorization": f"OAuth {FACEBOOK_PAGE_ACCESS_TOKEN}",
+                "offset": "0",
+                "file_size": str(file_size),
+                "Content-Type": "application/octet-stream",
+            },
+            data=f,
+        )
 
     if upload_resp.status_code != 200:
         return {"success": False, "platform": "facebook",

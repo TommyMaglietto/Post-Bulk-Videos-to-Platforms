@@ -11,7 +11,6 @@ Usage (standalone test):
     python tools/post_tiktok.py <video_path> "caption text"
 """
 
-import json
 import os
 import sys
 import time
@@ -88,16 +87,15 @@ def post_video(video_path: str, caption: str, hashtags: list[str]) -> dict:
     publish_id = init_data["data"]["publish_id"]
     upload_url = init_data["data"]["upload_url"]
 
-    # Step 2: Upload video file
-    with open(video_path, "rb") as f:
-        video_data = f.read()
-
+    # Step 2: Upload video file (streamed — avoids loading entire file into RAM)
     upload_headers = {
         "Content-Range": f"bytes 0-{file_size - 1}/{file_size}",
         "Content-Type": "video/mp4",
+        "Content-Length": str(file_size),
     }
 
-    upload_resp = requests.put(upload_url, headers=upload_headers, data=video_data)
+    with open(video_path, "rb") as f:
+        upload_resp = requests.put(upload_url, headers=upload_headers, data=f)
 
     if upload_resp.status_code not in (200, 201):
         return {"success": False, "platform": "tiktok",

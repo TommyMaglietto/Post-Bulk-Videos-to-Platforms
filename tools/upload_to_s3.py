@@ -11,6 +11,7 @@ Usage:
 import json
 import mimetypes
 import sys
+from urllib.parse import quote
 
 import boto3
 from botocore.exceptions import ClientError
@@ -58,7 +59,7 @@ def upload_video(client, file_path, s3_key: str) -> str:
         ExtraArgs={"ContentType": content_type},
     )
 
-    return f"https://{AWS_S3_BUCKET}.s3.{AWS_S3_REGION}.amazonaws.com/{s3_key}"
+    return f"https://{AWS_S3_BUCKET}.s3.{AWS_S3_REGION}.amazonaws.com/{quote(s3_key)}"
 
 
 def main():

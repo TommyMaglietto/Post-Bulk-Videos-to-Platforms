@@ -62,8 +62,14 @@ def main():
 
     # Load all data
     plan = load_json(TMP_DIR / "posting_plan.json")
-    video_urls = load_json(TMP_DIR / "video_urls.json")
     video_metadata = load_json(TMP_DIR / "video_metadata.json")
+
+    # video_urls.json is optional (only needed for Instagram; may not exist in dry-run)
+    urls_path = TMP_DIR / "video_urls.json"
+    video_urls = {}
+    if urls_path.exists():
+        with open(urls_path, "r", encoding="utf-8") as f:
+            video_urls = json.load(f)
 
     items = plan.get("items", [])
     schedule = plan.get("posting_plan", {}).get("recommended_schedule", [])
@@ -176,9 +182,12 @@ def main():
             "error": result.get("error"),
         }
         # Copy platform-specific IDs
-        for key in ("media_id", "publish_id", "video_id"):
-            if key in result and key != "video_id":
-                result_entry[key] = result[key]
+        if "media_id" in result:
+            result_entry["media_id"] = result["media_id"]
+        if "publish_id" in result:
+            result_entry["publish_id"] = result["publish_id"]
+        if platform == "facebook" and "video_id" in result:
+            result_entry["fb_video_id"] = result["video_id"]
 
         results.append(result_entry)
 

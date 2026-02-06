@@ -23,19 +23,23 @@ GENERATE_STEPS = [
 ]
 
 POST_STEPS = [
-    {"label": "Uploading videos to S3",     "script": "tools/upload_to_s3.py"},
-    {"label": "Executing posting plan",     "script": "tools/execute_posting_plan.py"},
+    {"label": "Uploading videos to S3",     "script": "tools/upload_to_s3.py",     "skip_on_dry_run": True},
+    {"label": "Executing posting plan",     "script": "tools/execute_posting_plan.py", "skip_on_dry_run": False},
 ]
 
 
-def run_steps(steps, extra_args=None):
+def run_steps(steps, dry_run=False):
     """Run a list of pipeline steps sequentially."""
     for i, step in enumerate(steps, start=1):
+        if dry_run and step.get("skip_on_dry_run"):
+            print(f"[Step {i}/{len(steps)}] {step['label']}... SKIPPED (dry-run)", flush=True)
+            continue
+
         print(f"[Step {i}/{len(steps)}] {step['label']}...", flush=True)
 
         cmd = [sys.executable, "-u", str(PROJECT_ROOT / step["script"])]
-        if extra_args:
-            cmd.extend(extra_args)
+        if dry_run and not step.get("skip_on_dry_run"):
+            cmd.append("--dry-run")
 
         result = subprocess.run(cmd, cwd=str(PROJECT_ROOT))
         if result.returncode != 0:
@@ -63,14 +67,12 @@ def main():
         print("Review the plan, then run: python tools/run_pipeline.py --post-only", flush=True)
     elif post_only:
         print("Mode: post-only (steps 3-4)\n", flush=True)
-        extra = ["--dry-run"] if dry_run else None
-        run_steps(POST_STEPS, extra_args=extra)
+        run_steps(POST_STEPS, dry_run=dry_run)
     else:
         mode = "dry-run" if dry_run else "full"
         print(f"Mode: {mode} (all steps)\n", flush=True)
         run_steps(GENERATE_STEPS)
-        extra = ["--dry-run"] if dry_run else None
-        run_steps(POST_STEPS, extra_args=extra)
+        run_steps(POST_STEPS, dry_run=dry_run)
 
     print(f"\n=== Pipeline complete === {datetime.now().isoformat()}", flush=True)
 
